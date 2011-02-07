@@ -20,7 +20,7 @@ module Cassandrb
     end
 
     def client
-      Thread.current[:cassandra_client] ||= Cassandra.new(keyspace, servers.to_s)
+      Thread.current[:cassandra_client] ||= Cassandra.new(self.keyspace, self.servers.to_s)
     end
 
     def configure(config_file, environment = 'development')
@@ -35,7 +35,7 @@ module Cassandrb
       raise Cassandrb::MissingConfiguration.new(config_file)        
     end
 
-    private
+    protected
       def extract_config(env_config)
         self.keyspace= env_config[:keyspace]
 
