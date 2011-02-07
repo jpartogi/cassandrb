@@ -1,0 +1,23 @@
+development:
+  keyspace: Keyspace1
+  servers:
+    - host: localhost
+      port: 9160
+    - host: 127.0.0.1
+      port: 9160
+
+production:
+  keyspace: Keyspace1
+  servers:
+    - host: localhost
+      port: 9160
+    - host: 127.0.0.1
+      port: 9160
+
+test:
+  keyspace: Keyspace1
+  servers:
+    - host: localhost
+      port: 9160
+    - host: 127.0.0.1
+      port: 9160

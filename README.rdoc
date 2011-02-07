@@ -1,0 +1,2 @@
+bundle install vendor
+bundle exec rspec spec/cassandrb_spec.rb
