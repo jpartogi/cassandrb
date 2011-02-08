@@ -1,2 +1,10 @@
+Development:
+        
+Install bundler with gem:
+$ gem install bundler
+
+Install required libraries with bundler:
 bundle install vendor
+
+Run rspec:
 bundle exec rspec spec/cassandrb_spec.rb
