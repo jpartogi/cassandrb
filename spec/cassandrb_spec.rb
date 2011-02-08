@@ -5,9 +5,10 @@ describe Cassandrb do
     lambda { Cassandrb.configure('not-here') }.should raise_error(Cassandrb::MissingConfiguration)
   end
 
-  it "should configure client" do
+  it "should configure client correctly" do
     Cassandrb.configure(File.join(File.dirname(__FILE__), 'fixtures', 'cassandra.yml'))
-    Cassandrb.client
+    Cassandrb.keyspace.should == 'Keyspace1'
+    Cassandrb.servers.should == ['localhost:9160', '127.0.0.1:9160']
   end
 
 end

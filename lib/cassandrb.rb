@@ -35,7 +35,23 @@ module Cassandrb
       raise Cassandrb::MissingConfiguration.new(config_file)        
     end
 
-    protected
+    def keyspace=(keyspace)
+      @keyspace= keyspace
+    end
+
+    def keyspace
+      @keyspace ||= nil
+    end
+
+    def servers=(servers=[])
+      @servers = servers
+    end
+
+    def servers
+      @servers ||= []
+    end
+
+    private
       def extract_config(env_config)
         self.keyspace= env_config[:keyspace]
 
@@ -48,21 +64,6 @@ module Cassandrb
         self.servers= tmp
       end
 
-      def keyspace=(keyspace)
-        @keyspace= keyspace
-      end
-
-      def keyspace
-        @keyspace ||= nil
-      end
-
-      def servers=(servers=[])
-        @servers = servers
-      end
-
-      def servers
-        @servers ||= []
-      end
   end
 
   class MissingConfiguration < StandardError
