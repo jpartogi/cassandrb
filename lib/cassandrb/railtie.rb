@@ -1,6 +1,6 @@
 require 'cassandrb'
 
-module Ripple
+module Cassandrb
   class Railtie < Rails::Railtie
 
     initializer "configure" do
