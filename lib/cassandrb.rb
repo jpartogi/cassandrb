@@ -4,7 +4,12 @@ require 'active_model'
 require 'cassandra/0.7'
 
 module Cassandrb
-      
+  extend ActiveSupport::Autoload
+  
+  autoload :Model
+  autoload :Columns
+  autoload :AttributeMethods
+
   class << self
 
     def config=(hash)
