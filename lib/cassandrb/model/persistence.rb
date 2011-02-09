@@ -7,7 +7,7 @@ module Cassandrb
 
       module InstanceMethods
         def save(*args)
-          self.key= SimpleUUID::UUID.new.to_s unless self.key.nil?
+          self.key= SimpleUUID::UUID.new.to_s if self.key.nil?
           self.client.insert(self.column_family, self.key, self.attributes)
           true
         end
