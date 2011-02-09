@@ -1,3 +1,5 @@
+require 'cassandrb'
+
 module Cassandrb
   module Model
     extend ActiveSupport::Concern
@@ -30,5 +32,6 @@ module Cassandrb
         Cassandrb.client
       end
     end
+
   end
 end

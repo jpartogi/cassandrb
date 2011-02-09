@@ -45,7 +45,7 @@ module Cassandrb
     end
 
     def keyspace
-      @keyspace ||= nil
+      @keyspace ||= 'Keyspace1'
     end
 
     def servers=(servers=[])
@@ -53,7 +53,7 @@ module Cassandrb
     end
 
     def servers
-      @servers ||= []
+      @servers ||= ['localhost:9160']
     end
 
     private
