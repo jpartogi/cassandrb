@@ -19,4 +19,10 @@ describe Cassandrb::Model do
     person = Person.new
     person.gender.should == 'Female'
   end
+
+  it "should let us define the key manually" do
+    person = Person.new
+    person.key= "1"
+    person.key.should == "1"
+  end
 end
