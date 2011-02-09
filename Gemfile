@@ -3,5 +3,5 @@ source :rubygems
 gemspec
 
 group :test do
-  gem 'rspec', "~> 2.0.0"
+  gem 'rspec', "~> 2.5.0"
 end
