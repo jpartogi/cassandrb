@@ -19,9 +19,15 @@ Gem::Specification.new do |s|
      "VERSION.yml",
      "cassandrb.gemspec",
      "lib/cassandrb.rb",
-     "lib/cassandrb/connection.rb",
+     "lib/cassandrb/attribute_methods.rb",
+     "lib/cassandrb/columns.rb",
+     "lib/cassandrb/model.rb",
      "lib/cassandrb/railtie.rb",
      "lib/cassandrb/version.rb",
+     "lib/cassandrb/model/column_family.rb",
+     "lib/cassandrb/model/finders.rb",
+     "lib/cassandrb/model/key.rb",
+     "lib/cassandrb/model/persistence.rb",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/scrum8/cassandrb}
