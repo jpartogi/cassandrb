@@ -9,12 +9,12 @@ module Cassandrb
         end
 
         def find_range(options={})
-          keyslice = self.client.get_range(self.column_family, options)
+          range = self.client.get_range(self.column_family, options)
 
-          keyslice.each.inject([]) do |arr, slice|
-            columns= slice.columns
-
-            arr << columns_to_model(columns)
+          range.each.inject([]) do |arr, keyslice|
+            columns= keyslice.columns
+            key= keyslice.key
+            arr << columns_to_model(key, columns)
           end
         end
 
@@ -28,11 +28,12 @@ module Cassandrb
           end
         end
 
-        def columns_to_model(columns)
+        def columns_to_model(key, columns)
           clazz= self.model_name.constantize rescue self
 
           clazz.new.tap do |model|
-            columns.each { |col_or_supercol| model.send("#{col_or_supercol.column.name}=", col_or_supercol.column.value) }  
+            model.key= key
+            columns.each { |col_or_supercol| model.send("#{col_or_supercol.column.name}=", col_or_supercol.column.value) }
           end
         end
       end
