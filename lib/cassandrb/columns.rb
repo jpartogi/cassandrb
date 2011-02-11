@@ -3,11 +3,13 @@ module Cassandrb
     def columns
       @columns ||= {}.with_indifferent_access
     end
+    alias fields columns
 
     def column(name, options={})
       col = Column.new(name, options)
       columns[col.name] = col
     end
+    alias field column
   end
 
   class Column
@@ -16,7 +18,7 @@ module Cassandrb
     
     def initialize(name, options={})
       @options= options
-      @name = name.to_sym
+      @name = name.to_s # Cassandra library does not like symbol :p
     end
 
     def default
