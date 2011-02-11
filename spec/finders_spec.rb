@@ -24,7 +24,13 @@ describe Cassandrb::Model::Finders do
   end
 
   it "should get a range of rows" do
-    people = Person.find_range(:finish => '1')
+    people = Person.find_each(:finish => '1')
     people.should be_kind_of Array
+  end
+
+  it "should get model by multiple keys" do
+    people = Person.all(["1","2"])
+    people.should be_kind_of Array
+    people.length.should be 2
   end
 end

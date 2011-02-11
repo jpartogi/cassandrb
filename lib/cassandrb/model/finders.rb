@@ -4,11 +4,11 @@ module Cassandrb
       extend ActiveSupport::Concern
 
       module ClassMethods
-        def find(key)
-          ordered_hash_to_model(self.client.get(self.column_family, key))
+        def find(key, options={})
+          all([key], options).first
         end
 
-        def find_range(options={})
+        def find_each(options={})
           range = self.client.get_range(self.column_family, options)
 
           range.each.inject([]) do |arr, keyslice|
@@ -18,12 +18,21 @@ module Cassandrb
           end
         end
 
+        def all(keys, options={})
+          results = self.client.multi_get(self.column_family, keys, options)
+
+          results.to_a.each.inject([]) do |arr, result|
+            arr << ordered_hash_to_model(result[0], result[1])
+          end
+        end
+
         private
-        def ordered_hash_to_model(ordered_hash)
+        def ordered_hash_to_model(key, ordered_hash)
           clazz= self.model_name.constantize rescue self
           
           hash= ordered_hash.to_hash
           clazz.new.tap do |model|
+            model.key= key
             hash.each {|k,v| model.send("#{k}=", v) }
           end
         end
