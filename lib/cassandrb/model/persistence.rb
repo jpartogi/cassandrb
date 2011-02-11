@@ -8,6 +8,8 @@ module Cassandrb
         def create(attrs={})
           self.new(attrs).tap {|o| o.save }
         end
+        alias insert create
+        
       end
 
       module InstanceMethods
@@ -15,19 +17,27 @@ module Cassandrb
           self.key= SimpleUUID::UUID.new.to_guid if self.key.nil?
           self.client.insert(self.column_family, self.key, self.attributes, options)
           true
+        rescue Thrift::ApplicationException
+          false
         end
 
         def destroy(options={})
           self.client.remove(self.column_family, self.key, options)
           true
+        rescue Thrift::ApplicationException
+          false
         end
         alias delete destroy
         alias remove destroy
 
         def update_attributes(attrs, options={})
-          self.client.insert(self.column_family, self.key, attrs, options)
+          self.attributes= attrs
+          self.client.insert(self.column_family, self.key, self.attributes, options)
           true
+        rescue Thrift::ApplicationException
+          false
         end
+        alias update update_attributes
       end
     end
   end

@@ -17,11 +17,10 @@ describe Cassandrb::Model::Persistence do
   end
 
   it "should be able to save model" do
-    person = Person.new(:name => 'Joe')
-    person.key= "1"
+    person = Person.new(:key => "1", :name => 'Joe')
     person.save.should be true
 
-    person = Person.create(:name => 'Boe')
+    person = Person.create(:key => "2", :name => 'Boe')
     person.should_not be nil
   end
 
