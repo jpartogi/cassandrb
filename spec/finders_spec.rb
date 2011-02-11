@@ -29,7 +29,7 @@ describe Cassandrb::Model::Finders do
   end
 
   it "should get model by multiple keys" do
-    people = Person.all(["1","2"])
+    people = Person.all(["1","3", "2"])
     people.should be_kind_of Array
     people.length.should be 2
   end

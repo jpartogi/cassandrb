@@ -14,6 +14,8 @@ module Cassandrb
           range.each.inject([]) do |arr, keyslice|
             columns= keyslice.columns
             key= keyslice.key
+
+            next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
             arr << columns_to_model(key, columns)
           end
         end
@@ -22,14 +24,17 @@ module Cassandrb
           results = self.client.multi_get(self.column_family, keys, options)
 
           results.to_a.each.inject([]) do |arr, result|
-            arr << ordered_hash_to_model(result[0], result[1])
+            key = result[0]
+            columns = result[1]
+
+            next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
+            arr << ordered_hash_to_model(key, columns)
           end
         end
 
         private
         def ordered_hash_to_model(key, ordered_hash)
           clazz= self.model_name.constantize rescue self
-          
           hash= ordered_hash.to_hash
           clazz.new.tap do |model|
             model.key= key
