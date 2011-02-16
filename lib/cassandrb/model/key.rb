@@ -12,6 +12,14 @@ module Cassandrb
           @key = value.to_s
         end
 
+        def superkey
+          @superkey
+        end
+
+        def superkey=(value)
+          @superkey = value.to_s
+        end
+
         def key_attr
           :key
         end

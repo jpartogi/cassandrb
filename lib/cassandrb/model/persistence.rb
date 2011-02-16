@@ -15,6 +15,8 @@ module Cassandrb
       module InstanceMethods
         def save(options={})
           self.key= SimpleUUID::UUID.new.to_guid if self.key.nil?
+
+
           self.client.insert(self.column_family, self.key, self.attributes, options)
           true
         rescue Thrift::ApplicationException

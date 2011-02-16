@@ -4,6 +4,13 @@ module Cassandrb
       extend ActiveSupport::Concern
 
       module ClassMethods
+
+        [ :where ].each do |name|
+          define_method(name) do |*args|
+            criteria.send(name, *args)
+          end
+        end
+
         def find(key, options={})
           all([key], options).first
         end
@@ -11,13 +18,7 @@ module Cassandrb
         def find_each(options={})
           range = self.client.get_range(self.column_family, options)
 
-          range.each.inject([]) do |arr, keyslice|
-            columns= keyslice.columns
-            key= keyslice.key
-
-            next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
-            arr << columns_to_model(key, columns)
-          end
+          get_slice(range)
         end
 
         def all(keys, options={})
@@ -30,6 +31,25 @@ module Cassandrb
             next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
             arr << ordered_hash_to_model(key, columns)
           end
+        end
+
+        def criteria
+          scope_stack.last || Cassandrb::Criteria.new(self)
+        end
+
+        def scope_stack
+          scope_stack_for = Thread.current[:cassandrb_scope_stack] ||= {}
+          scope_stack_for[object_id] ||= []
+        end
+
+        def get_slice(range)
+          range.each.inject([]) do |arr, keyslice|
+            columns= keyslice.columns
+            key= keyslice.key
+
+            next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
+            arr << columns_to_model(key, columns)
+          end          
         end
 
         private
