@@ -24,5 +24,9 @@ module Cassandrb
     def default
       options[:default]
     end
+
+    def validate_with
+      options[:validate_with] ||= 'UTF8Type'
+    end
   end
 end

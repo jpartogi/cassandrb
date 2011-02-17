@@ -26,7 +26,7 @@ module Cassandrb
 
       expressions = []
       criterias.each do |key,value|
-        @client.create_index(keyspace, column_family, key.to_s, "UTF8Type")
+        @client.create_index(keyspace, column_family, key.to_s, @clazz.columns[key].validate_with)
 
         expressions << @client.create_idx_expr(key.to_s, value, "==") # Don't hardcode to only ==
       end
