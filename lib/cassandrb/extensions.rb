@@ -1,0 +1,1 @@
+require 'cassandrb/extensions/symbol'

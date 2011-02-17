@@ -26,9 +26,18 @@ module Cassandrb
 
       expressions = []
       criterias.each do |key,value|
+
+        if key.respond_to? :field 
+          key= key.field
+        end
+        op='=='
+        if key.respond_to? :operator
+          op= key.operator
+        end
+
         @client.create_index(keyspace, column_family, key.to_s, @clazz.columns[key].validate_with)
 
-        expressions << @client.create_idx_expr(key.to_s, value, "==") # Don't hardcode to only ==
+        expressions << @client.create_idx_expr(key.to_s, value, op) # Don't hardcode to only ==
       end
 
       clause = @client.create_idx_clause(expressions)

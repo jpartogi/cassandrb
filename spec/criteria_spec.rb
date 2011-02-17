@@ -18,10 +18,10 @@ describe Cassandrb::Model::Finders do
   end
     
   it "should set the criteria" do
-    people = Person.where(:name => 'Joe')
+    people = Person.where(:name.eq => 'Joe')
 
     people.each do |person|
-      puts person.name
+      person.name
     end
   end
 end

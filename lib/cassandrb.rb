@@ -4,6 +4,7 @@ require 'active_model'
 require 'cassandra/0.7'
 
 require 'cassandrb/criteria'
+require 'cassandrb/extensions'
 
 module Cassandrb
   extend ActiveSupport::Autoload
