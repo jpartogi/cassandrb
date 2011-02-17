@@ -11,7 +11,11 @@ module Cassandrb
 
       module ClassMethods
         def column_family
-          self.model_name.plural
+          @column_family ||= self.model_name.plural
+        end
+
+        def column_family=(column_family)
+          @column_family= column_family
         end
       end
     end
