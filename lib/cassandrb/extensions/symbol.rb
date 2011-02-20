@@ -4,6 +4,22 @@ module Cassandrb
       def eq
         SymbolOperator.new(self, '==')
       end
+
+      def gte
+        SymbolOperator.new(self, '>=')
+      end
+
+      def gt
+        SymbolOperator.new(self, '>')
+      end
+
+      def lte
+        SymbolOperator.new(self, '<=')
+      end
+
+      def lt
+        SymbolOperator.new(self, '<')
+      end
     end
   end
 end

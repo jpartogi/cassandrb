@@ -37,7 +37,7 @@ module Cassandrb
 
         @client.create_index(keyspace, column_family, key.to_s, @clazz.columns[key].validate_with)
 
-        expressions << @client.create_idx_expr(key.to_s, value, op) # Don't hardcode to only ==
+        expressions << @client.create_idx_expr(key.to_s, value, op)
       end
 
       clause = @client.create_idx_clause(expressions)
