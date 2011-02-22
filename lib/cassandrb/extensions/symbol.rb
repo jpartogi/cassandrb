@@ -2,7 +2,7 @@ module Cassandrb
   module Extensions
     module Symbol
       def eq
-        SymbolOperator.new(self, '==')
+        SymbolOperator.new(self, '=')
       end
 
       def gte
@@ -30,7 +30,7 @@ class SymbolOperator
   attr_reader :field, :operator
 
   def initialize(field, operator, options={})
-    @field, @operator = field, operator
+    @field, @operator = field, operator || '='
   end unless method_defined?(:initialize)
 
   def <=>(other)
