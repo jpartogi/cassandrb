@@ -2,7 +2,7 @@ module Cassandrb
   module Extensions
     module Symbol
       def eq
-        SymbolOperator.new(self, '=')
+        SymbolOperator.new(self, '==')
       end
 
       def gte
