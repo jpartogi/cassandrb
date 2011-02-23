@@ -28,6 +28,8 @@ module Cassandrb
         super()
         @attributes = attributes_from_property_defaults
         self.attributes = attrs
+
+        run_callbacks(:initialize) { self }
       end
       
       def attributes

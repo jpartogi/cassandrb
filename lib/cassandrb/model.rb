@@ -12,12 +12,14 @@ module Cassandrb
 
     included do
       extend ActiveModel::Naming
-      include ActiveModel::Serialization
+      include ActiveModel::Serialization      
+      include Cassandrb::Model::Persistence
       extend Cassandrb::Columns
       include Cassandrb::AttributeMethods
+      include Cassandrb::Callbacks
+      include Cassandrb::Observers
       include Cassandrb::Model::Key
       include Cassandrb::Model::Finders
-      include Cassandrb::Model::Persistence
       include Cassandrb::Model::ColumnFamily
     end
 

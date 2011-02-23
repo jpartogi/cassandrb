@@ -27,7 +27,7 @@ describe Cassandrb::Model::Persistence do
   it "should be able to destroy model" do
     person = Person.new(:name => 'Moe')
     person.key= "3"
-    person.save
+    person.save(:ttl => 10)
 
     person = Person.find("3")
     person.destroy.should be true
@@ -45,5 +45,9 @@ describe Cassandrb::Model::Persistence do
 
     person = Person.find("4")
     person.name.should == "Zoe"
+  end
+
+  it "should be able to do callbacks" do
+    Person.should respond_to "before_save"
   end
 end

@@ -13,11 +13,21 @@ module Cassandrb
       end
 
       module InstanceMethods
+       def initialize
+          super
+          @new = true
+        end
+
+        # Determines whether this is a new document.
+        def new?
+          @new || false
+        end
+
         def save(options={})
           self.key= SimpleUUID::UUID.new.to_guid if self.key.nil?
 
-
           self.client.insert(self.column_family, self.key, self.attributes, options)
+
           true
         rescue Thrift::ApplicationException
           false

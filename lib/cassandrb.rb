@@ -11,7 +11,9 @@ module Cassandrb
   
   autoload :Model
   autoload :Columns
-  autoload :AttributeMethods
+  autoload :AttributeMethods  
+  autoload :Callbacks
+  autoload :Observers
 
   class << self
 
