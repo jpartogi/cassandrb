@@ -5,7 +5,7 @@ module Cassandrb
 
       module ClassMethods
 
-        [ :where ].each do |name|
+        [ :where, :limit ].each do |name|
           define_method(name) do |*args|
             criteria.send(name, *args)
           end

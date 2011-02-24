@@ -1,53 +1,40 @@
+require 'cassandrb/criterion/slice'
+
 module Cassandrb
   class Criteria
+    
+    include Criterion::Slice 
+
+    attr_accessor :criterias, :options, :clazz, :client, :keyspace, :column_family
 
     def initialize(clazz)
-      @criterias||= Hash.new
+      @criterias, @options = {}, {}
       @clazz= clazz
       @client= clazz.client
+      @keyspace= client.keyspace
+      @column_family= clazz.column_family
     end
 
-    def where(criteria_hash={})
-      @criterias.update(criteria_hash)
-      self
+    def where(selector={})
+      clone.tap do |criteria|
+        criterias.update(selector)
+        index_slices= true
+      end
     end
 
-    def criterias=(criterias)
-      @criterias= criterias
-    end
-
-    def criterias
-      @criterias ||= Hash.new
+    def limit(value=100)
+      clone.tap { |criteria| criteria.options[:limit] = value }
     end
     
     def each(&proc)
-      keyspace= @client.keyspace
-      column_family= @clazz.column_family
+      clone.tap do |criteria|
+        build_index_slices if index_slices?
 
-      expressions = []
-      criterias.each do |key,value|
-
-        if key.respond_to? :field 
-          key= key.field
+        slices.each do |result|
+          proc.call(result)
         end
-        op='=='
-        if key.respond_to? :operator
-          op= key.operator
-        end
-
-        @client.create_index(keyspace, column_family, key.to_s, @clazz.columns[key].validate_with)
-
-        expressions << @client.create_idx_expr(key.to_s, value, op)
       end
-
-      clause = @client.create_idx_clause(expressions)
-      slice= @client.get_indexed_slices(column_family, clause)
-      results = @clazz.get_slice(slice)
-
-      results.each do |result|
-        proc.call(result)
-      end
-      self      
     end
+
   end
 end

@@ -17,11 +17,22 @@ describe Cassandrb::Model::Finders do
     @client.disconnect!
   end
     
-  it "should set the criteria" do
-    people = Person.where(:name.eq => 'Joe')
+  it "should retrieve records using specified criteria" do
+    people = Person.where(:name => 'Joe')
+
+    people.should be_kind_of Cassandrb::Criteria
+    people.should respond_to :each
+  end
+
+  it "should limit the number of records retrieved" do
+    people = Person.where(:name => 'Joe').limit(2)
+    people.should respond_to :each
 
     people.each do |person|
-      person.name
+      puts person
     end
+
+    people = Person.limit(1)
+    people.should respond_to :each
   end
 end
