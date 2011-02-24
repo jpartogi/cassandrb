@@ -38,4 +38,16 @@ describe Cassandrb::Model do
     person.key.should == "1"
   end
 
+  it "should be able to clone object" do
+    joe = Person.new
+    joe.name = 'Joe'
+
+    john = joe.clone
+
+    john.name = 'John'
+
+    joe.name.should == 'Joe'
+    john.name.should == 'John'
+
+  end
 end
