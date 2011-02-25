@@ -5,32 +5,23 @@ module Cassandrb
 
       module ClassMethods
 
-        [ :where, :limit ].each do |name|
+        [ :where, :limit, :all ].each do |name|
           define_method(name) do |*args|
             criteria.send(name, *args)
           end
         end
 
         def find(key, options={})
-          all([key], options).first
-        end
+          original_key= key.dup
+          key = [key] unless key.is_a? Array
 
-        def find_each(options={})
-          range = self.client.get_range(self.column_family, options)
+          rows= get_by_rowkey(key, options)
 
-          get_slice(range)
-        end
-
-        def all(keys, options={})
-          results = self.client.multi_get(self.column_family, keys, options)
-
-          results.to_a.each.inject([]) do |arr, result|
-            key = result[0]
-            columns = result[1]
-
-            next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
-            arr << ordered_hash_to_model(key, columns)
+          if original_key.is_a? Array then rows
+          elsif original_key.is_a? String or key.is_a? Integer then rows.first
+          else raise 'Not supported'
           end
+          
         end
 
         def criteria
@@ -42,17 +33,19 @@ module Cassandrb
           scope_stack_for[object_id] ||= []
         end
 
-        def get_slice(range)
-          range.each.inject([]) do |arr, keyslice|
-            columns= keyslice.columns
-            key= keyslice.key
+        private
+        def get_by_rowkey(keys, options={})
+          results = self.client.multi_get(self.column_family, keys, options)
+
+          results.to_a.each.inject([]) do |arr, result|
+            key = result[0]
+            columns = result[1]
 
             next arr if columns.to_a.empty? # Columns maybe empty if the row is in a tombstone.
-            arr << columns_to_model(key, columns)
-          end          
+            arr << ordered_hash_to_model(key, columns)
+          end
         end
 
-        private
         def ordered_hash_to_model(key, ordered_hash)
           clazz= self.model_name.constantize rescue self
           hash= ordered_hash.to_hash

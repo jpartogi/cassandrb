@@ -25,14 +25,14 @@ describe Cassandrb::Model::Finders do
   end
 
   it "should limit the number of records retrieved" do
-    people = Person.where(:name => 'Joe').limit(2)
+    people = Person.where(:name => 'Joe').limit(1)
     people.should respond_to :each
-
-    people.each do |person|
-      puts person
-    end
+    people.to_a.first.name.should == 'Joe'
 
     people = Person.limit(1)
-    people.should respond_to :each
+#    people.to_a.should == 1
+
+    people = Person.all
+#    people.length.should == 4
   end
 end
