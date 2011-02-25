@@ -29,8 +29,16 @@ describe Cassandrb::Model::Finders do
     people.should respond_to :each
     people.to_a.first.name.should == 'Joe'
 
+    person = Person.first
+    person.name.should == 'Koe'
+
+    person = Person.where(:name => 'Joe').first
+    person.name.should == 'Joe'
+
     people = Person.limit(1)
 #    people.to_a.should == 1
+    people = people.more(:from => '2').limit(2)
+    people = people.from('2')
 
     people = Person.all
 #    people.length.should == 4

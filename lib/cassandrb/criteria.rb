@@ -29,17 +29,39 @@ module Cassandrb
     def limit(value=100)
       clone.tap { |criteria| criteria.options[:count] = value }
     end
-    
-    def each(&proc)
-      objects= self.to_a
 
-      objects.each do |result|
-        proc.call(result)
+    def more(options={})
+      clone.tap do |criteria|
+        criteria.options[:start]= options[:from]
+        criteria.options[:finish]= options[:to]
       end
     end
 
+    def from(value)
+      more(:from => value)
+    end
+
+    def to(value)
+      more(:to => value)
+    end
+    
+    def each(&block)
+      objects= self.to_a
+      objects.each(&block)
+    end
+
+    def first
+      objects(:count => 1).first
+    end
+
+    def objects(options={})
+      if criterias.empty? then range_slices(options)
+      else indexed_slices(options)
+      end
+    end
+    
     def to_a
-      objects= if criterias.empty? then range_slices(options)
+      if criterias.empty? then range_slices(options)
       else indexed_slices(options)
       end
     end
@@ -68,7 +90,10 @@ module Cassandrb
 
       if more > 0
         options[:start] = last_key
-        options[:count] = more
+        options[:count] = if more.eql? 1 then more + 1
+                          else more
+                          end
+
         objects.pop
 
         caller_method=  parse_caller(caller.first).last
