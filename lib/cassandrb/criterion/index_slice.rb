@@ -9,7 +9,13 @@ module Cassandrb
 
         indexed_slices = client.get_indexed_slices(column_family, clause, options)
 
-        slices_to_objects(indexed_slices)
+        non_deleted_slices = non_deleted_slices(indexed_slices)
+        nds_count = non_deleted_slices.length
+
+        unless nds_count == self.options[:count]
+          non_deleted_slices = non_deleted_slices.merge(get_more_slices(non_deleted_slices))
+        end
+        non_deleted_slices
       end
 
       def expressions
